@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from "express-validator";
 
 const validateEmployee = [
   body('name').trim().notEmpty().withMessage('Name is required.'),
@@ -19,4 +19,4 @@ function handleValidation(req, res, next) {
   next();
 }
 
-module.exports = { validateEmployee, handleValidation };
+export { validateEmployee, handleValidation };

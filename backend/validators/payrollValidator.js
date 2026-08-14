@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from "express-validator";
 
 const validatePayroll = [
   body('employee_id').isInt().withMessage('Valid employee_id is required.'),
@@ -15,4 +15,4 @@ function handleValidation(req, res, next) {
   next();
 }
 
-module.exports = { validatePayroll, handleValidtion };
+export { validatePayroll, handleValidation };

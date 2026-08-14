@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from "express-validator";
 
 const validateLeaveRequest = [
   body('employee_id').isInt().withMessage('Valid employee_id is required.'),
@@ -10,9 +10,9 @@ const validateLeaveRequest = [
 function handleValidation(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ success: false, errors: errors.array()});
+    return res.status(400).json({ success: false, errors: errors.array() });
   }
   next();
 }
 
-module.exports = { validateLeaveRequest, handleValidation };
+export { validateLeaveRequest, handleValidation };

@@ -1,9 +1,9 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const db = require('../config/db');
+import dotenv from "dotenv";
+dotenv.config();
+import bcrypt from "bcrypt";
+import db from "../config/db.js";
 
 async function fixPasswords() {
-  // Give each account a real password for testing — team should agree on these
   const accounts = [
     { email: 'lungile.moyo@moderntech.com', password: 'HrAdmin123!' },
     { email: 'sibongile.nkosi@moderntech.com', password: 'Manager123!' },

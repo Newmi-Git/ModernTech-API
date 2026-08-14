@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from "jsonwebtoken";
 
 function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -9,7 +9,7 @@ function verifyToken(req, res, next) {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { userId, employeeId, role }
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
@@ -25,4 +25,4 @@ function requireRole(...allowedRoles) {
   };
 }
 
-module.exports = { verifyToken, requireRole };
+export { verifyToken, requireRole };
