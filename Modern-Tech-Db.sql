@@ -131,3 +131,8 @@ SELECT COUNT(*) FROM users;          -- Should return 10
 SELECT COUNT(*) FROM payroll;        -- Should return 10
 SELECT COUNT(*) FROM attendance;     -- Should return 50
 SELECT COUNT(*) FROM leave_requests; -- Should return 13
+
+-- Indexes for frequently queried foreign key columns
+CREATE INDEX idx_payroll_employee_id ON payroll(employee_id);
+CREATE INDEX idx_attendance_employee_id ON attendance(employee_id);
+CREATE INDEX idx_leave_requests_employee_id ON leave_requests(employee_id);
