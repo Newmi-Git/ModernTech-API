@@ -136,3 +136,13 @@ SELECT COUNT(*) FROM leave_requests; -- Should return 13
 CREATE INDEX idx_payroll_employee_id ON payroll(employee_id);
 CREATE INDEX idx_attendance_employee_id ON attendance(employee_id);
 CREATE INDEX idx_leave_requests_employee_id ON leave_requests(employee_id);
+
+-- Aggregate view for payroll totals (Avoids N+1 queries & JS loops)
+CREATE OR REPLACE VIEW payroll_summary AS
+SELECT 
+    COUNT(payroll_id) AS total_records,
+    SUM(hours_worked) AS total_hours_worked,
+    AVG(hours_worked) AS average_hours_worked,
+    SUM(leave_deductions) AS total_leave_deductions,
+    AVG(leave_deductions) AS average_leave_deductions
+FROM payroll;
