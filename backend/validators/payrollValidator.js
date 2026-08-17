@@ -22,4 +22,4 @@ function handleValidation(req, res, next) {
   next();
 }
 
-export { validatePayroll, handleValidation };
+export { validatePayroll, handleValidation, validatePayrollUpdate };
