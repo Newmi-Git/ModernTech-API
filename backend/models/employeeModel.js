@@ -17,33 +17,18 @@ const getEmployeeById = async (employee_id) => {
     return rows;
 };
 
+
 const createEmployee = async (
-    name,
-    position,
-    department,
-    salary,
-    employment_history,
-    contact,
-    score,
-    goals_met,
-    goals_total
+    name, position, department, salary,
+    employment_history, contact, score, goals_met, goals_total
 ) => {
-    await pool.query(
+    const [result] = await pool.query(
         `INSERT INTO employees
         (name, position, department, salary, employment_history, contact, score, goals_met, goals_total)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-            name,
-            position,
-            department,
-            salary,
-            employment_history,
-            contact,
-            score,
-            goals_met,
-            goals_total
-        ]
+        [name, position, department, salary, employment_history, contact, score, goals_met, goals_total]
     );
+    return result.insertId;   // <-- new
 };
 
 const updateEmployee = async (
