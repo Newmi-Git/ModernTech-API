@@ -1,7 +1,8 @@
 import {
     getAllPayrolls,
     getPayrollByEmployeeId,
-    updatePayroll
+    updatePayroll,
+    getPayrollSummary
 } from "../models/payrollModel.js";
 
 
@@ -83,9 +84,19 @@ const editPayroll = async (req, res) => {
     });
 };
 
+const getPayrollSummaryController = async (req, res) => {
+    const summary = await getPayrollSummary();
+
+    res.json({
+        success: true,
+        data: summary
+    });
+};
+
 
 export {
     getAllPayrollsController,
     getOnePayroll,
-    editPayroll
+    editPayroll,
+    getPayrollSummaryController
 };

@@ -34,6 +34,9 @@ const updatePayroll = async (
         WHERE employee_id = ?`,
         [hours_worked, leave_deductions, employee_id]
     );
+
+    payrollSummaryCache = null;
+    payrollSummaryCacheTime = 0;
 };
 
 const getPayrollSummary = async () => {
