@@ -1,14 +1,15 @@
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import pool from "../config/db.js";
 import {
     getEmployees,
     getEmployeeById,
-    createEmployee,
     updateEmployee,
     deleteEmployee
 } from "../models/employeeModel.js";
 
 const getAllEmployees = async (req, res) => {
     const employees = await getEmployees();
-
     res.json(employees);
 };
 
@@ -18,13 +19,10 @@ const getOneEmployee = async (req, res) => {
 
     if (!employee) {
         return res.status(404).json({ message: "Employee not found" });
-    }   
+    }
 
     res.json(employee);
 };
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import pool from "../config/db.js";
 
 const createNewEmployee = async (req, res) => {
     const {
@@ -46,11 +44,9 @@ const createNewEmployee = async (req, res) => {
         );
         const employeeId = empResult.insertId;
 
-        // Auto-generate email if HR didn't provide one
         const userEmail = email ||
             `${name.toLowerCase().trim().replace(/\s+/g, ".")}@moderntech.com`;
 
-        // Generate a random temp password (e.g. "9f3a1c8b2e7d")
         const tempPassword = crypto.randomBytes(6).toString("hex");
         const passwordHash = await bcrypt.hash(tempPassword, 10);
 
@@ -70,6 +66,16 @@ const createNewEmployee = async (req, res) => {
     } catch (err) {
         await connection.rollback();
         console.error(err);
+
+        if (err.code === "ER_DUP_ENTRY") {
+            if (err.sqlMessage.includes("contact")) {
+                return res.status(409).json({ success: false, message: "An employee with this contact already exists." });
+            }
+            if (err.sqlMessage.includes("email")) {
+                return res.status(409).json({ success: false, message: "A login with this email already exists." });
+            }
+        }
+
         res.status(500).json({ success: false, message: "Failed to create employee." });
     } finally {
         connection.release();
@@ -80,43 +86,22 @@ const editEmployee = async (req, res) => {
     const { employee_id } = req.params;
 
     const {
-        name,
-        position,
-        department,
-        salary,
-        employment_history,
-        contact,
-        score,
-        goals_met,
-        goals_total
+        name, position, department, salary,
+        employment_history, contact, score, goals_met, goals_total
     } = req.body;
 
     await updateEmployee(
-        employee_id,
-        name,
-        position,
-        department,
-        salary,
-        employment_history,
-        contact,
-        score,
-        goals_met,
-        goals_total
+        employee_id, name, position, department, salary,
+        employment_history, contact, score, goals_met, goals_total
     );
 
-    res.json({
-        message: "Employee updated successfully"
-    });
+    res.json({ message: "Employee updated successfully" });
 };
 
 const removeEmployee = async (req, res) => {
     const { employee_id } = req.params;
-
     await deleteEmployee(employee_id);
-
-    res.json({
-        message: "Employee deleted successfully"
-    });
+    res.json({ message: "Employee deleted successfully" });
 };
 
 export {
