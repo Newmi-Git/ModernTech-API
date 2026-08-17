@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/", verifyToken, getAllAttendance);
 
-+router.post("/", verifyToken, requireRole("hr", "manager"), validateAttendance, handleValidation, markAttendance);
+router.post("/", verifyToken, requireRole("hr", "manager"), validateAttendance, handleValidation, markAttendance);
 
 
 export default router;
