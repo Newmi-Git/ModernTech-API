@@ -7,6 +7,10 @@ const validateLeaveRequest = [
   body('status').optional().isIn(['Pending', 'Approved', 'Denied']).withMessage("Status must be 'Pending', 'Approved', or 'Denied'."),
 ];
 
+const validateLeaveStatusUpdate = [
+  body('status').isIn(['Pending', 'Approved', 'Denied']).withMessage("Status must be 'Pending', 'Approved', or 'Denied'."),
+];
+
 function handleValidation(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -15,4 +19,4 @@ function handleValidation(req, res, next) {
   next();
 }
 
-export { validateLeaveRequest, handleValidation };
+export { validateLeaveRequest, validateLeaveStatusUpdate, handleValidation };

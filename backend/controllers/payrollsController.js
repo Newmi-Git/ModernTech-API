@@ -6,9 +6,12 @@ import {
 
 
 const calculatePayroll = (payroll) => {
+   const denom = payroll.hours_worked - payroll.leave_deductions;
+   if (!denom) {
+       throw Object.assign(new Error("Invalid hours/leave deduction values."), { status: 400 });
+   }
     const hourlyRate =
-        payroll.final_salary /
-        (payroll.hours_worked - payroll.leave_deductions);
+        payroll.final_salary / denom;
 
     const tax = payroll.final_salary * 0.18;
     const pension = payroll.final_salary * 0.05;
