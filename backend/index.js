@@ -9,9 +9,12 @@ import attendanceRoutes from "./routes/attendenceRoutes.js";
 
 import leaveRequestRoutes from "./routes/leaverequestRoutes.js";
 
+import authRoutes from "./routes/auth.js"
+
 dotenv.config();
 
 const app = express();
+
 
 app.use(express.json());
 
@@ -22,6 +25,8 @@ app.use("/api/payrolls", payrollRoutes);
 app.use("/api/attendance", attendanceRoutes);
 
 app.use("/api/leave-requests", leaveRequestRoutes);
+
+app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
