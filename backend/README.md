@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ModernTech Enterprise Database Documentation
 
 ## Overview
@@ -201,3 +202,6 @@ The script populates initial development data into the system:
 1. Open **MySQL Workbench** or your preferred database GUI client.
 2. Execute the `Modern-Tech-Db.sql` script.
 3. The database `modern_tech_db` will be created automatically along with all required tables, seed data, indexes, and summary views.
+=======
+# ModernTech-API
+>>>>>>> origin/main
