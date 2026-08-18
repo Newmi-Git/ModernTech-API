@@ -25,6 +25,64 @@ The database consists of 5 core tables connected via relational foreign keys.
 +-------+   +---------+ +------------+ +----------------+
 ```
 
+### Mermaid ERD Diagram
+
+```mermaid
+erDiagram
+    EMPLOYEES ||--o| USERS : "1:0..1"
+    EMPLOYEES ||--o{ PAYROLL : "1:N"
+    EMPLOYEES ||--o{ ATTENDANCE : "1:N"
+    EMPLOYEES ||--o{ LEAVE_REQUESTS : "1:N"
+
+    EMPLOYEES {
+        int employee_id PK
+        string name
+        string position
+        string department
+        decimal salary
+        text employment_history
+        string contact UK
+        int score
+        int goals_met
+        int goals_total
+    }
+
+    USERS {
+        int user_id PK
+        int employee_id FK
+        string email UK
+        string password_hash
+        enum role
+    }
+
+    PAYROLL {
+        int payroll_id PK
+        int employee_id FK
+        decimal hours_worked
+        decimal leave_deductions
+        decimal base_salary
+        decimal bonus
+        decimal deductions
+        decimal final_salary
+    }
+
+    ATTENDANCE {
+        int attendance_id PK
+        int employee_id FK
+        date date
+        enum status "Present, Half Day, Absent, Leave, Late"
+    }
+
+    LEAVE_REQUESTS {
+        int request_id PK
+        int employee_id FK
+        date start_date
+        date end_date
+        string reason
+        enum status "Pending, Approved, Denied"
+    }
+```
+
 ---
 
 ## Data Dictionary
@@ -60,36 +118,42 @@ Manages application access credentials and role permissions linked to employee p
 
 ### 3. `payroll`
 
-Tracks monthly compensation, hours logged, deductions, and calculated net payouts.
+Tracks compensation calculations, hours logged, base salary, bonuses, deductions, and calculated final payouts.
 
-| Column Name        | Data Type        | Constraints                                                 | Description                  |
-| :----------------- | :--------------- | :---------------------------------------------------------- | :--------------------------- |
-| `payroll_id`       | `INT`            | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique payroll record ID     |
-| `employee_id`      | `INT`            | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID           |
-| `hours_worked`     | `DECIMAL(5, 2)`  | `NOT NULL, CHECK (hours_worked >= 0)`                       | Total hours recorded         |
-| `leave_deductions` | `DECIMAL(5, 2)`  | `DEFAULT 0, CHECK (leave_deductions >= 0)`                  | Unpaid leave deduction hours |
-| `final_salary`     | `DECIMAL(10, 2)` | `NOT NULL, CHECK (final_salary >= 0)`                       | Final payout amount          |
+| Column Name        | Data Type        | Constraints                                                 | Description                        |
+| :----------------- | :--------------- | :---------------------------------------------------------- | :--------------------------------- |
+| `payroll_id`       | `INT`            | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique payroll record ID           |
+| `employee_id`      | `INT`            | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID                 |
+| `hours_worked`     | `DECIMAL(5, 2)`  | `NOT NULL, CHECK (hours_worked >= 0)`                       | Total hours recorded               |
+| `leave_deductions` | `DECIMAL(5, 2)`  | `DEFAULT 0, CHECK (leave_deductions >= 0)`                  | Unpaid leave deduction hours       |
+| `base_salary`      | `DECIMAL(10, 2)` | `NOT NULL, CHECK (base_salary >= 0)`                        | Base starting salary               |
+| `bonus`            | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (bonus >= 0)`                   | Additional bonus payout            |
+| `deductions`       | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (deductions >= 0)`              | Total deductions applied           |
+| `final_salary`     | `DECIMAL(10, 2)` | `NOT NULL, CHECK (final_salary >= 0)`                       | Final net payout amount            |
 
 ### 4. `attendance`
 
 Logs daily workforce attendance statuses.
 
-| Column Name     | Data Type                            | Constraints                                                 | Description                |
-| :-------------- | :----------------------------------- | :---------------------------------------------------------- | :------------------------- |
-| `attendance_id` | `INT`                                | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique attendance entry ID |
-| `employee_id`   | `INT`                                | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID         |
-| `date`          | `DATE`                               | `NOT NULL`                                                  | Date of log                |
-| `status`        | `ENUM('Present', 'Absent', 'Leave')` | `NOT NULL`                                                  | Daily attendance state     |
+| Column Name     | Data Type                                              | Constraints                                                 | Description                |
+| :-------------- | :----------------------------------------------------- | :---------------------------------------------------------- | :------------------------- |
+| `attendance_id` | `INT`                                                  | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique attendance entry ID |
+| `employee_id`   | `INT`                                                  | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID         |
+| `date`          | `DATE`                                                 | `NOT NULL`                                                  | Date of log                |
+| `status`        | `ENUM('Present', 'Half Day', 'Absent', 'Leave', 'Late')` | `NOT NULL`                                                  | Daily attendance state     |
+
+> **Table Constraint:** `UNIQUE KEY uq_employee_date (employee_id, date)` prevents duplicate attendance records for an employee on the same calendar date.
 
 ### 5. `leave_requests`
 
-Handles leave application submission and approval workflows.
+Handles leave application submission and date-range approval workflows.
 
 | Column Name   | Data Type                               | Constraints                                                 | Description             |
 | :------------ | :-------------------------------------- | :---------------------------------------------------------- | :---------------------- |
 | `request_id`  | `INT`                                   | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique leave request ID |
 | `employee_id` | `INT`                                   | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Submitting employee ID  |
-| `date`        | `DATE`                                  | `NOT NULL`                                                  | Requested leave date    |
+| `start_date`  | `DATE`                                  | `NOT NULL`                                                  | Leave start date        |
+| `end_date`    | `DATE`                                  | `NOT NULL`                                                  | Leave end date          |
 | `reason`      | `VARCHAR(255)`                          | `NOT NULL`                                                  | Reason for request      |
 | `status`      | `ENUM('Pending', 'Approved', 'Denied')` | `NOT NULL, DEFAULT 'Pending'`                               | Status of the request   |
 
@@ -126,9 +190,9 @@ The script populates initial development data into the system:
 
 - **10 Employees:** Across Development, HR, QA, Sales, Marketing, Design, IT, Finance, and Support departments.
 - **10 User Accounts:** Configured with roles (`hr`, `manager`, `employee`).
-- **10 Payroll Records:** Corresponding to each active employee.
-- **50 Attendance Records:** Logs tracking 5 workdays per employee.
-- **13 Leave Requests:** Historical and pending leave requests.
+- **10 Payroll Records:** Corresponding to each active employee with base salary, bonuses, and deductions.
+- **50 Attendance Records:** Logs tracking 5 workdays per employee across all attendance statuses.
+- **13 Leave Requests:** Historical and pending leave request date ranges.
 
 ---
 
