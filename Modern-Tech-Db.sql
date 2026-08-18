@@ -31,6 +31,9 @@ CREATE TABLE payroll (
     employee_id INT NOT NULL,
     hours_worked DECIMAL(5, 2) NOT NULL CHECK (hours_worked >= 0),
     leave_deductions DECIMAL(5, 2) DEFAULT 0 CHECK (leave_deductions >= 0),
+    base_salary DECIMAL(10, 2) NOT NULL CHECK (base_salary >= 0),
+    bonus DECIMAL(10, 2) NOT NULL DEFAULT 0 CHECK (bonus >= 0),
+    deductions DECIMAL(10, 2) NOT NULL DEFAULT 0 CHECK (deductions >= 0),
     final_salary DECIMAL(10, 2) NOT NULL CHECK (final_salary >= 0),
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
@@ -40,23 +43,23 @@ CREATE TABLE attendance (
     attendance_id INT PRIMARY KEY AUTO_INCREMENT,
     employee_id INT NOT NULL,
     date DATE NOT NULL,
-    status ENUM('Present', 'Absent', 'Leave') NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
+    status ENUM('Present', 'Half Day', 'Absent', 'Leave', 'Late') NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_employee_date (employee_id, date)
 );
 
 -- 5. LEAVE REQUESTS TABLE
 CREATE TABLE leave_requests (
     request_id INT PRIMARY KEY AUTO_INCREMENT,
     employee_id INT NOT NULL,
-    date DATE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     reason VARCHAR(255) NOT NULL,
     status ENUM('Pending', 'Approved', 'Denied') NOT NULL DEFAULT 'Pending',
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
 
-
--- 1. INSERT EMPLOYEES (from employee_info.json)
-
+-- 1. INSERT EMPLOYEES
 INSERT INTO employees (employee_id, name, position, department, salary, employment_history, contact, score, goals_met, goals_total) VALUES
 (1, 'Sibongile Nkosi', 'Software Engineer', 'Development', 70000.00, 'Joined in 2015, promoted to Senior in 2018', 'sibongile.nkosi@moderntech.com', 94, 5, 5),
 (2, 'Lungile Moyo', 'HR Manager', 'HR', 80000.00, 'Joined in 2013, promoted to Manager in 2017', 'lungile.moyo@moderntech.com', 88, 4, 5),
@@ -69,8 +72,7 @@ INSERT INTO employees (employee_id, name, position, department, salary, employme
 (9, 'Karabo Dlamini', 'Accountant', 'Finance', 62000.00, 'Joined in 2018', 'karabo.dlamini@moderntech.com', 67, 3, 5),
 (10, 'Fatima Patel', 'Customer Support Lead', 'Support', 58000.00, 'Joined in 2016', 'fatima.patel@moderntech.com', 84, 4, 5);
 
--- 2. INSERT USERS (Authentication accounts linked to employees)
--- Note: Replace '$2b$10$SampleHashedPassword...' with real hashed passwords when testing authentication
+-- 2. INSERT USERS
 INSERT INTO users (employee_id, email, password_hash, role) VALUES
 (2, 'lungile.moyo@moderntech.com', '$2b$10$SampleHashedPassword1', 'hr'),
 (1, 'sibongile.nkosi@moderntech.com', '$2b$10$SampleHashedPassword2', 'manager'),
@@ -83,20 +85,20 @@ INSERT INTO users (employee_id, email, password_hash, role) VALUES
 (9, 'karabo.dlamini@moderntech.com', '$2b$10$SampleHashedPassword9', 'employee'),
 (10, 'fatima.patel@moderntech.com', '$2b$10$SampleHashedPassword10', 'employee');
 
--- 3. INSERT PAYROLL (from payroll_data.json)
-INSERT INTO payroll (employee_id, hours_worked, leave_deductions, final_salary) VALUES
-(1, 160.00, 8.00, 69500.00),
-(2, 150.00, 10.00, 79000.00),
-(3, 170.00, 4.00, 54800.00),
-(4, 165.00, 6.00, 59700.00),
-(5, 158.00, 5.00, 57850.00),
-(6, 168.00, 2.00, 64800.00),
-(7, 175.00, 3.00, 71800.00),
-(8, 160.00, 0.00, 56000.00),
-(9, 155.00, 5.00, 61500.00),
-(10, 162.00, 4.00, 57750.00);
+-- 3. INSERT PAYROLL (base_salary matches final_salary, bonus & deductions set to 0.00)
+INSERT INTO payroll (employee_id, hours_worked, leave_deductions, base_salary, bonus, deductions, final_salary) VALUES
+(1, 160.00, 8.00, 69500.00, 0.00, 0.00, 69500.00),
+(2, 150.00, 10.00, 79000.00, 0.00, 0.00, 79000.00),
+(3, 170.00, 4.00, 54800.00, 0.00, 0.00, 54800.00),
+(4, 165.00, 6.00, 59700.00, 0.00, 0.00, 59700.00),
+(5, 158.00, 5.00, 57850.00, 0.00, 0.00, 57850.00),
+(6, 168.00, 2.00, 64800.00, 0.00, 0.00, 64800.00),
+(7, 175.00, 3.00, 71800.00, 0.00, 0.00, 71800.00),
+(8, 160.00, 0.00, 56000.00, 0.00, 0.00, 56000.00),
+(9, 155.00, 5.00, 61500.00, 0.00, 0.00, 61500.00),
+(10, 162.00, 4.00, 57750.00, 0.00, 0.00, 57750.00);
 
--- 4. INSERT ATTENDANCE (from attendance.json)
+-- 4. INSERT ATTENDANCE
 INSERT INTO attendance (employee_id, date, status) VALUES
 (1, '2025-07-25', 'Present'), (1, '2025-07-26', 'Absent'), (1, '2025-07-27', 'Present'), (1, '2025-07-28', 'Present'), (1, '2025-07-29', 'Present'),
 (2, '2025-07-25', 'Present'), (2, '2025-07-26', 'Present'), (2, '2025-07-27', 'Absent'), (2, '2025-07-28', 'Present'), (2, '2025-07-29', 'Present'),
@@ -109,23 +111,23 @@ INSERT INTO attendance (employee_id, date, status) VALUES
 (9, '2025-07-25', 'Present'), (9, '2025-07-26', 'Present'), (9, '2025-07-27', 'Present'), (9, '2025-07-28', 'Absent'), (9, '2025-07-29', 'Present'),
 (10, '2025-07-25', 'Present'), (10, '2025-07-26', 'Present'), (10, '2025-07-27', 'Absent'), (10, '2025-07-28', 'Present'), (10, '2025-07-29', 'Present');
 
--- 5. INSERT LEAVE REQUESTS (from attendance.json)
-INSERT INTO leave_requests (employee_id, date, reason, status) VALUES
-(1, '2025-07-22', 'Sick Leave', 'Approved'),
-(1, '2024-12-01', 'Personal', 'Pending'),
-(2, '2025-07-15', 'Family Responsibility', 'Denied'),
-(2, '2024-12-02', 'Vacation', 'Approved'),
-(3, '2025-07-10', 'Medical Appointment', 'Approved'),
-(3, '2024-12-05', 'Personal', 'Pending'),
-(4, '2025-07-20', 'Bereavement', 'Approved'),
-(5, '2024-12-01', 'Childcare', 'Pending'),
-(6, '2025-07-18', 'Sick Leave', 'Approved'),
-(7, '2025-07-22', 'Vacation', 'Pending'),
-(8, '2024-12-02', 'Medical Appointment', 'Approved'),
-(9, '2025-07-19', 'Childcare', 'Denied'),
-(10, '2024-12-03', 'Vacation', 'Pending');
+-- 5. INSERT LEAVE REQUESTS (start_date & end_date set to the same day)
+INSERT INTO leave_requests (employee_id, start_date, end_date, reason, status) VALUES
+(1, '2025-07-22', '2025-07-22', 'Sick Leave', 'Approved'),
+(1, '2024-12-01', '2024-12-01', 'Personal', 'Pending'),
+(2, '2025-07-15', '2025-07-15', 'Family Responsibility', 'Denied'),
+(2, '2024-12-02', '2024-12-02', 'Vacation', 'Approved'),
+(3, '2025-07-10', '2025-07-10', 'Medical Appointment', 'Approved'),
+(3, '2024-12-05', '2024-12-05', 'Personal', 'Pending'),
+(4, '2025-07-20', '2025-07-20', 'Bereavement', 'Approved'),
+(5, '2024-12-01', '2024-12-01', 'Childcare', 'Pending'),
+(6, '2025-07-18', '2025-07-18', 'Sick Leave', 'Approved'),
+(7, '2025-07-22', '2025-07-22', 'Vacation', 'Pending'),
+(8, '2024-12-02', '2024-12-02', 'Medical Appointment', 'Approved'),
+(9, '2025-07-19', '2025-07-19', 'Childcare', 'Denied'),
+(10, '2024-12-03', '2024-12-03', 'Vacation', 'Pending');
 
-
+-- Verification Queries
 SELECT COUNT(*) FROM employees;      -- Should return 10
 SELECT COUNT(*) FROM users;          -- Should return 10
 SELECT COUNT(*) FROM payroll;        -- Should return 10
@@ -137,7 +139,7 @@ CREATE INDEX idx_payroll_employee_id ON payroll(employee_id);
 CREATE INDEX idx_attendance_employee_id ON attendance(employee_id);
 CREATE INDEX idx_leave_requests_employee_id ON leave_requests(employee_id);
 
--- Aggregate view for payroll totals (Avoids N+1 queries & JS loops)
+-- Aggregate view for payroll totals
 CREATE OR REPLACE VIEW payroll_summary AS
 SELECT 
     COUNT(payroll_id) AS total_records,
@@ -145,4 +147,4 @@ SELECT
     AVG(hours_worked) AS average_hours_worked,
     SUM(leave_deductions) AS total_leave_deductions,
     AVG(leave_deductions) AS average_leave_deductions
-FROM payroll;
+FROM payroll; 
