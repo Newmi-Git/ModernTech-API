@@ -1,8 +1,22 @@
 import pool from "../config/db.js";
 
-const getLeaveRequests = async () => {
-    const [rows] = await pool.query("SELECT * FROM leave_requests");
-    return rows;
+const getLeaveRequests = async (page, limit) => {
+    if (!page || !limit) {
+        const [rows] = await pool.query("SELECT * FROM leave_requests");
+        return {
+            rows,
+            total: rows.length
+        };
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
+
+    const [rows] = await pool.query("SELECT COUNT(*)AS total FROM leave_requests");
+
+    return {
+        rows,
+        total
+    };
 };
 
 const createLeaveRequest = async (employee_id, start_date, end_date, reason) => {

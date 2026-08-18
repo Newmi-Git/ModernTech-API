@@ -8,8 +8,24 @@ import pool from "../config/db.js";
 
 
 const getAllLeaveRequests = async (req, res) => {
-    const requests = await getLeaveRequests();
-    res.json(requests);
+    try{
+        const { page, limit } = req.query;
+
+        const { rows, total } = await getLeaveRequests(page, limit);
+
+        if (!page || !limit) {
+            return res.json(rows);
+        }
+
+        res.json({
+            data: rows,
+            total,
+            page: Number(page),
+            totalPages: Math.ceil(total / Number(limit))
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 

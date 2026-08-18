@@ -8,9 +8,24 @@ import {
     deleteEmployee
 } from "../models/employeeModel.js";
 
-const getAllEmployees = async (req, res) => {
-    const employees = await getEmployees();
-    res.json(employees);
+const getAllEmployees = async (req, res, next) => {
+    try {
+        const { page, limit } = req.query;
+        const { rows, total } = await getEmployees(page, limit);
+
+        if (!page || !limit) {
+            return res.json(rows);
+        }
+
+        res.json({
+            data: rows,
+            total,
+            page: Number(page),
+            totalPages: Math.ceil(total / limit)
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 const getOneEmployee = async (req, res) => {

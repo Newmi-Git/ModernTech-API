@@ -5,9 +5,24 @@ import {
 
 
 const getAllAttendance = async (req, res) => {
-    const attendance = await getAttendance();
+    try{
+        const { page, limit } = req.query;
 
-    res.json(attendance);
+        const { rows, total } = await getAttendance(page, limit);
+
+        if (!page || !limit) {
+            return res.json(rows);
+        }
+
+        res.jon({
+            data: rows,
+            total,
+            page: Number(page),
+            totaalPages: Math.ceil(total / Number(limit))
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 

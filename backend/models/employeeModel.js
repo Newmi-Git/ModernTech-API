@@ -1,8 +1,19 @@
 import pool from "../config/db.js";
 
-const getEmployees = async () => {
-    const [rows] = await pool.query("SELECT * FROM employees");
-    return rows;
+const getEmployees = async (page, limit) => {
+    if (!page || !limit) {
+        const [rows] = await pool.query("SELECT * FROM employees");
+        return { rows, total: rows.length };
+    }
+
+    const offset = (page - 1) * limit;
+    const [rows] = await pool.query(
+        "SELECT * FROM employees LIMIT ? OFFSET ?",
+        [Number(limit), Number(offset)]
+    );
+    const [[{ total }]] = await pool.query("SELECT COUNT(*) AS total FROM employees");
+
+    return { rows, total };
 };
 
 const getEmployeeById = async (employee_id) => {
