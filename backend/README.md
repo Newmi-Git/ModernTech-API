@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ModernTech Enterprise Database Documentation
 
 ## Overview
@@ -121,26 +120,26 @@ Manages application access credentials and role permissions linked to employee p
 
 Tracks compensation calculations, hours logged, base salary, bonuses, deductions, and calculated final payouts.
 
-| Column Name        | Data Type        | Constraints                                                 | Description                        |
-| :----------------- | :--------------- | :---------------------------------------------------------- | :--------------------------------- |
-| `payroll_id`       | `INT`            | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique payroll record ID           |
-| `employee_id`      | `INT`            | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID                 |
-| `hours_worked`     | `DECIMAL(5, 2)`  | `NOT NULL, CHECK (hours_worked >= 0)`                       | Total hours recorded               |
-| `leave_deductions` | `DECIMAL(5, 2)`  | `DEFAULT 0, CHECK (leave_deductions >= 0)`                  | Unpaid leave deduction hours       |
-| `base_salary`      | `DECIMAL(10, 2)` | `NOT NULL, CHECK (base_salary >= 0)`                        | Base starting salary               |
-| `bonus`            | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (bonus >= 0)`                   | Additional bonus payout            |
-| `deductions`       | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (deductions >= 0)`              | Total deductions applied           |
-| `final_salary`     | `DECIMAL(10, 2)` | `NOT NULL, CHECK (final_salary >= 0)`                       | Final net payout amount            |
+| Column Name        | Data Type        | Constraints                                                 | Description                  |
+| :----------------- | :--------------- | :---------------------------------------------------------- | :--------------------------- |
+| `payroll_id`       | `INT`            | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique payroll record ID     |
+| `employee_id`      | `INT`            | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID           |
+| `hours_worked`     | `DECIMAL(5, 2)`  | `NOT NULL, CHECK (hours_worked >= 0)`                       | Total hours recorded         |
+| `leave_deductions` | `DECIMAL(5, 2)`  | `DEFAULT 0, CHECK (leave_deductions >= 0)`                  | Unpaid leave deduction hours |
+| `base_salary`      | `DECIMAL(10, 2)` | `NOT NULL, CHECK (base_salary >= 0)`                        | Base starting salary         |
+| `bonus`            | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (bonus >= 0)`                   | Additional bonus payout      |
+| `deductions`       | `DECIMAL(10, 2)` | `NOT NULL, DEFAULT 0, CHECK (deductions >= 0)`              | Total deductions applied     |
+| `final_salary`     | `DECIMAL(10, 2)` | `NOT NULL, CHECK (final_salary >= 0)`                       | Final net payout amount      |
 
 ### 4. `attendance`
 
 Logs daily workforce attendance statuses.
 
-| Column Name     | Data Type                                              | Constraints                                                 | Description                |
-| :-------------- | :----------------------------------------------------- | :---------------------------------------------------------- | :------------------------- |
-| `attendance_id` | `INT`                                                  | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique attendance entry ID |
-| `employee_id`   | `INT`                                                  | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID         |
-| `date`          | `DATE`                                                 | `NOT NULL`                                                  | Date of log                |
+| Column Name     | Data Type                                                | Constraints                                                 | Description                |
+| :-------------- | :------------------------------------------------------- | :---------------------------------------------------------- | :------------------------- |
+| `attendance_id` | `INT`                                                    | `PRIMARY KEY, AUTO_INCREMENT`                               | Unique attendance entry ID |
+| `employee_id`   | `INT`                                                    | `FOREIGN KEY -> employees(employee_id) (ON DELETE CASCADE)` | Target employee ID         |
+| `date`          | `DATE`                                                   | `NOT NULL`                                                  | Date of log                |
 | `status`        | `ENUM('Present', 'Half Day', 'Absent', 'Leave', 'Late')` | `NOT NULL`                                                  | Daily attendance state     |
 
 > **Table Constraint:** `UNIQUE KEY uq_employee_date (employee_id, date)` prevents duplicate attendance records for an employee on the same calendar date.
@@ -202,6 +201,3 @@ The script populates initial development data into the system:
 1. Open **MySQL Workbench** or your preferred database GUI client.
 2. Execute the `Modern-Tech-Db.sql` script.
 3. The database `modern_tech_db` will be created automatically along with all required tables, seed data, indexes, and summary views.
-=======
-# ModernTech-API
->>>>>>> origin/main
