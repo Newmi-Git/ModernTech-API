@@ -6,9 +6,9 @@ import employeeRoutes from "./routes/employeeRoutes.js";
 
 import payrollRoutes from "./routes/payrollRoutes.js";
 
-import attendanceRoutes from "./routes/attendenceRoutes.js";
+import attendanceRoutes from "./routes/attendanceRoutes.js";
 
-import leaveRequestRoutes from "./routes/leaverequestRoutes.js";
+import leaveRequestRoutes from "./routes/leaveRequestRoutes.js";
 
 import authRoutes from "./routes/auth.js"
 

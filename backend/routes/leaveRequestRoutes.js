@@ -5,7 +5,7 @@ import {
     getAllLeaveRequests,
     submitLeaveRequest,
     updateLeaveRequestStatus
-} from "../controllers/leaverequestController.js";
+} from "../controllers/leaveRequestController.js";
 
 const router = express.Router();
 
