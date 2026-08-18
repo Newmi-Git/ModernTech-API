@@ -6,6 +6,9 @@ import {
     getPayrollSummary
 } from "../models/payrollModel.js";
 
+let summaryCache = { data: null, expiresAt: 0 };
+const SUMMARY_CACHE_TTL_MS = 30_000; // 30 seconds 
+
 
 const calculatePayroll = (payroll) => {
    const denom = payroll.hours_worked - payroll.leave_deductions;
@@ -92,9 +95,25 @@ const editPayroll = async (req, res) => {
 };
 
 
-const getPayrollSummaryController = async (req, res) => {
-    const summary = await getPayrollSummary();
-    res.json(summary);
+const getPayrollSummaryController = async (req, res, next) => {
+    try {
+        const now = Date.now();
+
+        if (summaryCache.data && summaryCache.expiresAt > now) {
+            return res.json({ ...summaryCache.data, cached: true });
+        }
+
+        const summary = await getPayrollSummary();
+
+        summaryCache = {
+            data: summary,
+            expiresAt: now + SUMMARY_CACHE_TTL_MS
+        };
+
+        res.json({ ...summary, cached: false });
+    } catch (err) {
+        next(err);
+    }
 };
 
 
