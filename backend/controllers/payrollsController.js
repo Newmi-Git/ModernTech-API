@@ -6,6 +6,7 @@ import {
     getPayrollSummary
 } from "../models/payrollModel.js";
 
+import { getCached, setCached, clearCached } from "../utils/cache.js";
 
 const calculatePayroll = (payroll) => {
    const denom = payroll.hours_worked - payroll.leave_deductions;
@@ -35,8 +36,17 @@ const calculatePayroll = (payroll) => {
 
 
 const getAllPayrollsController = async (req, res) => {
+    const cached = getCached("payrolls:all");
+
+    if (cached) {
+        return res.json(cached);
+    }
+
     const payrolls = await getAllPayrolls();
     const calculatedPayrolls = payrolls.map(payroll => calculatePayroll(payroll));
+
+    setCached("payrolls:all", calculatedPayrolls, 30_000);
+
     res.json(calculatedPayrolls);
 };
 
@@ -66,6 +76,8 @@ const createNewPayroll = async (req, res) => {
         deductions || 0
     );
 
+    clearCached("payrolls:all");
+
     res.status(201).json({
         message: "Payroll record created successfully.",
         payroll_id: payrollId
@@ -84,6 +96,8 @@ const editPayroll = async (req, res) => {
         bonus || 0,
         deductions || 0
     );
+
+    clearCached("payrolls:all")
 
     const payroll = await getPayrollByEmployeeId(employee_id);
     const calculatedPayroll = calculatePayroll(payroll[0]);
