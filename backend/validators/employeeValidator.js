@@ -12,7 +12,7 @@ const validateEmployee = [
   body('department').trim().escape().notEmpty().withMessage('Department is required.'),
   body('salary').isFloat({ min: 0 }).withMessage('Salary must be a positive number.'),
   body('contact').trim().escape().notEmpty().withMessage('Contact is required.'),
-  body('score').optional().isInt({ min: 0, max: 100 }).withMessage('Score must be between 0 and 100.'),
+  body('score').optional({ nullable: true }).isInt({ min: 0, max: 100 }).withMessage('Score must be between 0 and 100.'),
   body('goals_met').optional().isInt({ min: 0 }).withMessage('Goals met must be 0 or more.'),
   body('goals_total').optional().isInt({ min: 0 }).withMessage('Goals total must be 0 or more.'),
 ];
