@@ -7,9 +7,19 @@ import {
     updateEmployee,
     deleteEmployee
 } from "../models/employeeModel.js";
+import { getCached, setCached, clearCached } from "../utils/cache.js";
 
 const getAllEmployees = async (req, res) => {
+    const cached = getCached("employees:all");
+
+    if (cached) {
+        return res.json(cached);
+    }
+
     const employees = await getEmployees();
+
+    setCached("employees:all", employees, 30_000);
+
     res.json(employees);
 };
 
@@ -58,6 +68,8 @@ const createNewEmployee = async (req, res) => {
 
         await connection.commit();
 
+        clearCached("employees:all")
+
         res.status(201).json({
             message: "Employee and login account created successfully.",
             employee_id: employeeId,
@@ -95,12 +107,15 @@ const editEmployee = async (req, res) => {
         employment_history, contact, score, goals_met, goals_total
     );
 
+    clearCached("employees:all");
+
     res.json({ message: "Employee updated successfully" });
 };
 
 const removeEmployee = async (req, res) => {
     const { employee_id } = req.params;
     await deleteEmployee(employee_id);
+    clearCached("employees:all");
     res.json({ message: "Employee deleted successfully" });
 };
 

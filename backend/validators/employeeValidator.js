@@ -1,15 +1,23 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
+
+const validateEmployeeId = [
+  param('employee_id')
+    .isInt({ min: 1 })
+    .withMessage('Employee ID must be a positive integer.')
+];
 
 const validateEmployee = [
-  body('name').trim().notEmpty().withMessage('Name is required.'),
-  body('position').trim().notEmpty().withMessage('Position is required.'),
-  body('department').trim().notEmpty().withMessage('Department is required.'),
+  body('name').trim().escape().notEmpty().withMessage('Name is required.'),
+  body('position').trim().escape().notEmpty().withMessage('Position is required.'),
+  body('department').trim().escape().notEmpty().withMessage('Department is required.'),
   body('salary').isFloat({ min: 0 }).withMessage('Salary must be a positive number.'),
-  body('contact').trim().notEmpty().withMessage('Contact is required.'),
+  body('contact').trim().escape().notEmpty().withMessage('Contact is required.'),
   body('score').optional().isInt({ min: 0, max: 100 }).withMessage('Score must be between 0 and 100.'),
   body('goals_met').optional().isInt({ min: 0 }).withMessage('Goals met must be 0 or more.'),
   body('goals_total').optional().isInt({ min: 0 }).withMessage('Goals total must be 0 or more.'),
 ];
+
+
 
 function handleValidation(req, res, next) {
   const errors = validationResult(req);
@@ -19,4 +27,4 @@ function handleValidation(req, res, next) {
   next();
 }
 
-export { validateEmployee, handleValidation };
+export { validateEmployee, validateEmployeeId, handleValidation };

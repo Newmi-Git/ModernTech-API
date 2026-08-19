@@ -10,7 +10,7 @@ const getEmployeeById = async (employee_id) => {
         "SELECT * FROM employees WHERE employee_id = ?",
         [employee_id]
     );
-    return rows;
+    return rows[0];
 };
 
 const createEmployee = async (
