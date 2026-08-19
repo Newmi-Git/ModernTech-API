@@ -7,7 +7,7 @@ const validateRequestId = [
 ];
 
 const validateLeaveRequest = [
-  body('employee_id').isInt().withMessage('Valid employee_id is required.'),
+  body('employee_id').optional().isInt().withMessage('employee_id must be an integer.'),
   body('start_date').isDate().withMessage('A valid start date is required.'),
   body('end_date').isDate().withMessage('A valid end date is required.'),
   body('reason').trim().escape().notEmpty().withMessage('Reason is required.'),

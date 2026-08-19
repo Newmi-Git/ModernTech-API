@@ -14,13 +14,22 @@ const getAllLeaveRequests = async (req, res) => {
 
 
 const submitLeaveRequest = async (req, res) => {
-    const { employee_id, start_date, end_date, reason } = req.body;
+    const { start_date, end_date, reason } = req.body;
+
+    // HR/manager can file on behalf of someone else if employee_id is given;
+    // a plain employee can only ever file for themselves.
+    const employee_id = (req.user.role === "hr" || req.user.role === "manager")
+        ? (req.body.employee_id || req.user.employeeId)
+        : req.user.employeeId;
+
+    if (!employee_id) {
+        return res.status(400).json({ success: false, message: "No employee record linked to this account." });
+    }
 
     await createLeaveRequest(employee_id, start_date, end_date, reason);
 
     res.json({ message: "Leave request submitted successfully" });
 };
-
 
 const updateLeaveRequestStatus = async (req, res) => {
     const { request_id } = req.params;
