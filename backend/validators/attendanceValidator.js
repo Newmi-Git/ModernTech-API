@@ -3,7 +3,7 @@ import { body, validationResult } from "express-validator";
 const validateAttendance = [
   body('employee_id').isInt().withMessage('Valid employee_id is required.'),
   body('date').isDate().withMessage('A valid date is required.'),
-  body('status').isIn(['Present', 'Absent', 'Leave']).withMessage("Status must be 'Present', 'Absent', or 'Leave'."),
+  body('status').isIn(['Present', 'Absent', 'Leave', 'Late', 'Half Day']).withMessage("Status must be 'Present', 'Absent', 'Leave', 'Late', or 'Half Day'."),
 ];
 
 function handleValidation(req, res, next) {
