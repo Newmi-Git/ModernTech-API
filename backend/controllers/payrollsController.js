@@ -112,7 +112,6 @@ const getPayrollSummaryController = async (req, res) => {
     res.json(summary);
 };
 
-
 export {
     getAllPayrollsController,
     getOnePayroll,
