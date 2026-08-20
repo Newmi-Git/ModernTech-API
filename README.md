@@ -1,3 +1,71 @@
+# ModernTech API
+
+Backend service for the ModernTech HR & Payroll Management System — a
+Node.js/Express REST API backed by MySQL, providing employee management,
+authentication, payroll, attendance, and leave request functionality for
+the ModernTech Solutions frontend.
+
+## Tech Stack
+
+- **Runtime:** Node.js + Express
+- **Database:** MySQL
+- **Auth:** JWT (jsonwebtoken) + bcrypt password hashing
+- **Validation:** express-validator
+- **Hosting:** Railway (API + MySQL)
+
+## Project Structure
+
+backend/
+├── config/ # DB connection config
+├── controllers/ # Route handler logic
+├── middleware/ # Auth (verifyToken, requireRole)
+├── models/ # DB query layer
+├── routes/ # Express route definitions
+├── validators/ # Request validation rules
+├── utils/ # Shared helpers (caching, etc.)
+├── scripts/ # One-off maintenance scripts
+└── Modern-Tech-Db.sql # Full schema + seed data
+
+
+
+## Getting Started
+
+1. Clone the repo and install dependencies:
+```bash
+   cd backend
+   npm install
+```
+2. Set up environment variables (`.env`) — DB host/user/password, `JWT_SECRET`.
+3. Run the schema against your MySQL instance:
+```bash
+   mysql -u <user> -p < backend/Modern-Tech-Db.sql
+```
+4. Start the server:
+```bash
+   npm start
+```
+
+## Documentation
+
+Each core area of the system is documented separately by the person who
+built it:
+
+| Area | Author | Docs |
+|---|---|---|
+| Database schema, ERD & seed data | Stephan | [backend/README.md](./backend/README.md) |
+| Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching-newmi.md](./docs/backend-auth-caching-newmi.md) |
+| _(add area)_ | Vuyo | *coming soon* |
+| _(add area)_ | Karabo | *coming soon* |
+
+## API Testing
+
+Postman collection and testing notes are in [`Testing/`](./Testing).
+
+## Related Repos
+
+- Frontend: [ModernTech-Solutions](https://github.com/Newmi-Git/ModernTech-Solutions)
+
+
 ## Authentication & Authorization
 
 Login (`POST /api/auth/login`) verifies credentials with bcrypt and issues a
