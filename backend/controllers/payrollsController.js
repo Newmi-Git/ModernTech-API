@@ -103,7 +103,7 @@ const editPayroll = async (req, res) => {
     const payroll = await getPayrollByEmployeeId(employee_id);
     const calculatedPayroll = calculatePayroll(payroll[0]);
 
-    res.json({success: false, message: "Payroll updated successfully", payroll: calculatedPayroll });
+    res.json({success: true, message: "Payroll updated successfully", payroll: calculatedPayroll });
 };
 
 
