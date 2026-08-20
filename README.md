@@ -45,6 +45,17 @@ backend/
    npm start
 ```
 
+
+# USER LOGINS
+
+## HR LOGIN
+EMAIL: lungile.moyo@moderntech.com
+Password: HrAdmin123!
+
+## Employee LOGIN
+EMAIL: thabo.molefe@moderntech.com
+Password: Employee123!
+
 ## Documentation
 
 Each core area of the system is documented separately by the person who
@@ -55,7 +66,7 @@ built it:
 | Database schema, ERD & seed data | Stephan | [backend/README.md](./backend/README.md) |
 | Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching.md](./docs/backend-auth-caching.md) |
 | _(add area)_ | Vuyo | *coming soon* |
-| _(add area)_ | Karabo | *coming soon* |
+| _(add area)_ | Karah | *coming soon* |
 
 ## API Testing
 
