@@ -5,7 +5,7 @@ import {
 } from "../models/leaveRequestModel.js";
 
 import pool from "../config/db.js";
-
+import asyncHandler from "../utils/asyncHandler.js";
 
 const getAllLeaveRequests = async (req, res) => {
     const requests = await getLeaveRequests();
@@ -13,11 +13,9 @@ const getAllLeaveRequests = async (req, res) => {
 };
 
 
-const submitLeaveRequest = async (req, res) => {
+const submitLeaveRequest = asyncHandler(async (req, res) => {
     const { start_date, end_date, reason } = req.body;
 
-    // HR/manager can file on behalf of someone else if employee_id is given;
-    // a plain employee can only ever file for themselves.
     const employee_id = (req.user.role === "hr" || req.user.role === "manager")
         ? (req.body.employee_id || req.user.employeeId)
         : req.user.employeeId;
@@ -26,10 +24,13 @@ const submitLeaveRequest = async (req, res) => {
         return res.status(400).json({ success: false, message: "No employee record linked to this account." });
     }
 
-    await createLeaveRequest(employee_id, start_date, end_date, reason);
+    if (new Date(end_date) < new Date(start_date)) {
+        return res.status(400).json({ success: false, message: "End date cannot be before start date." });
+    }
 
-    res.json({ message: "Leave request submitted successfully" });
-};
+    await createLeaveRequest(employee_id, start_date, end_date, reason);
+    res.json({success: true, message: "Leave request submitted successfully" });
+});
 
 const updateLeaveRequestStatus = async (req, res) => {
     const { request_id } = req.params;
@@ -63,7 +64,7 @@ const updateLeaveRequestStatus = async (req, res) => {
         }
     }
 
-    res.json({ message: `Leave request ${status.toLowerCase()} successfully` });
+    res.json({success: true, message: `Leave request ${status.toLowerCase()} successfully` });
 };
 
 

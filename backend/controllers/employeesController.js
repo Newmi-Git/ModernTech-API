@@ -28,7 +28,7 @@ const getOneEmployee = async (req, res) => {
     const employee = await getEmployeeById(employee_id);
 
     if (!employee) {
-        return res.status(404).json({ message: "Employee not found" });
+        return res.status(404).json({success: false, message: "Employee not found" });
     }
 
     res.json(employee);
@@ -71,6 +71,7 @@ const createNewEmployee = async (req, res) => {
         clearCached("employees:all")
 
         res.status(201).json({
+            success: true,
             message: "Employee and login account created successfully.",
             employee_id: employeeId,
             login: { email: userEmail, temporary_password: tempPassword }
@@ -109,14 +110,14 @@ const editEmployee = async (req, res) => {
 
     clearCached("employees:all");
 
-    res.json({ message: "Employee updated successfully" });
+    res.json({success: true, message: "Employee updated successfully" });
 };
 
 const removeEmployee = async (req, res) => {
     const { employee_id } = req.params;
     await deleteEmployee(employee_id);
     clearCached("employees:all");
-    res.json({ message: "Employee deleted successfully" });
+    res.json({success: true, message: "Employee deleted successfully" });
 };
 
 export {

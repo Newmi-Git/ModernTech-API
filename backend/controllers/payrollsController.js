@@ -56,7 +56,7 @@ const getOnePayroll = async (req, res) => {
     const payroll = await getPayrollByEmployeeId(employee_id);
 
     if (payroll.length === 0) {
-        return res.status(404).json({ message: "Payroll record not found" });
+        return res.status(404).json({success: false, message: "Payroll record not found" });
     }
 
     const calculatedPayroll = calculatePayroll(payroll[0]);
@@ -79,6 +79,7 @@ const createNewPayroll = async (req, res) => {
     clearCached("payrolls:all");
 
     res.status(201).json({
+        success: true,
         message: "Payroll record created successfully.",
         payroll_id: payrollId
     });
@@ -102,7 +103,7 @@ const editPayroll = async (req, res) => {
     const payroll = await getPayrollByEmployeeId(employee_id);
     const calculatedPayroll = calculatePayroll(payroll[0]);
 
-    res.json({ message: "Payroll updated successfully", payroll: calculatedPayroll });
+    res.json({success: false, message: "Payroll updated successfully", payroll: calculatedPayroll });
 };
 
 
