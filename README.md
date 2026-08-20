@@ -53,7 +53,7 @@ built it:
 | Area | Author | Docs |
 |---|---|---|
 | Database schema, ERD & seed data | Stephan | [backend/README.md](./backend/README.md) |
-| Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching-newmi.md](./docs/backend-auth-caching.md) |
+| Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching.md](./docs/backend-auth-caching.md) |
 | _(add area)_ | Vuyo | *coming soon* |
 | _(add area)_ | Karabo | *coming soon* |
 
