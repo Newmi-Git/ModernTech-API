@@ -29,7 +29,7 @@ Password: Employee123!
 
 ## Project Structure
 
-​```
+​```bash
 backend/
 ├── config/       # DB connection config
 ├── controllers/  # Route handler logic
