@@ -1,6 +1,14 @@
 import pool from "../config/db.js";
 
-const getAttendance = async () => {
+const getAttendance = async (page, limit) => {
+    if (page && limit) {
+        const offset = (Number(page) - 1) * Number(limit);
+        const [rows] = await pool.query(
+            "SELECT * FROM attendance LIMIT ? OFFSET ?",
+            [Number(limit), offset]
+        );
+        return rows;
+    }
     const [rows] = await pool.query("SELECT * FROM attendance");
     return rows;
 };

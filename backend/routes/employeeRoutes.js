@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken, requireRole } from "../middleware/auth.js";
+import { verifyToken, requireRole, requireOwnerOrRole } from "../middleware/auth.js";
 import {
     getAllEmployees,
     getOneEmployee,
