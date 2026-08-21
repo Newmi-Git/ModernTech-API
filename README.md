@@ -9,6 +9,16 @@ the ModernTech Solutions frontend.
 
 [View the live site](https://moderntechsolutionz.netlify.app/html/login.html)
 
+# USER LOGINS
+
+## HR LOGIN
+EMAIL: lungile.moyo@moderntech.com
+Password: HrAdmin123!
+
+## Employee LOGIN
+EMAIL: thabo.molefe@moderntech.com
+Password: Employee123!
+
 ## Tech Stack
 
 - **Runtime:** Node.js + Express
@@ -49,16 +59,6 @@ backend/
    npm start
 ```
 
-
-# USER LOGINS
-
-## HR LOGIN
-EMAIL: lungile.moyo@moderntech.com
-Password: HrAdmin123!
-
-## Employee LOGIN
-EMAIL: thabo.molefe@moderntech.com
-Password: Employee123!
 
 ## Documentation
 
