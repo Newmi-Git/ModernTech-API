@@ -14,10 +14,3 @@ With the token, getting all payroll data
 with the token, getting all attendance data
 ![alt text](image-4.png)
 
-
-https://harmonious-dango-bfa9bb.netlify.app/
-
-
-curl -i -X POST https://moderntech-api-production.up.railway.app/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"thabo.molefe@moderntech.com","password":"Employee123!"}'

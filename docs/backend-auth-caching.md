@@ -1,5 +1,5 @@
 
-# Backend Contributions — Newmi
+# Backend Contributions — Yaghya
 
 **Role:** Authentication & Server-side Validation
 **Rubric components covered:** Implementation of secure authentication,

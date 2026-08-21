@@ -15,17 +15,18 @@ the ModernTech Solutions frontend.
 
 ## Project Structure
 
+​```
 backend/
-├── config/ # DB connection config
-├── controllers/ # Route handler logic
-├── middleware/ # Auth (verifyToken, requireRole)
-├── models/ # DB query layer
-├── routes/ # Express route definitions
-├── validators/ # Request validation rules
-├── utils/ # Shared helpers (caching, etc.)
-├── scripts/ # One-off maintenance scripts
-└── Modern-Tech-Db.sql # Full schema + seed data
-
+├── config/       # DB connection config
+├── controllers/  # Route handler logic
+├── middleware/   # Auth (verifyToken, requireRole)
+├── models/       # DB query layer
+├── routes/       # Express route definitions
+├── validators/   # Request validation rules
+├── utils/        # Shared helpers (caching, etc.)
+├── scripts/      # One-off maintenance scripts
+└── Modern-Tech-Db.sql   # Full schema + seed data
+​```
 
 
 ## Getting Started
@@ -65,7 +66,7 @@ built it:
 |---|---|---|
 | Database schema, ERD & seed data | Stephan | [docs/Database&Data-Architecture.md](./docs/Database&Data-Architecture.md) |
 | Core API Routes & Performance | Vuyo | [docs/Core-API-Routes&Performance.md](./docs/Core-API-Routes&Performance.md) |
-| Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching.md](./docs/backend-auth-caching.md) |
+| Auth, authorization & caching strategy | Yaghya | [docs/backend-auth-caching.md](./docs/backend-auth-caching.md) |
 | Integration, Error Handling & Documentation | Karah | [docs/Integration-Error-Handling&Documentation.md](./docs/Integration-Error-Handling&Documentation.md) |
 
 ## API Testing
