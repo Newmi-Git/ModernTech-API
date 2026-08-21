@@ -65,7 +65,7 @@ built it:
 |---|---|---|
 | Database schema, ERD & seed data | Stephan | [backend/README.md](./backend/README.md) |
 | Auth, authorization & caching strategy | Newmi | [docs/backend-auth-caching.md](./docs/backend-auth-caching.md) |
-| Core API Routes & Performance | Vuyo | [docs/Core-API-Routes-&-Performance] (./docs/Core-API-Routes-&-Performance.md) |
+| Core API Routes & Performance | Vuyo | [docs/Core API Routes & Performance.md] (./docs/Core-API-Routes-&-Performance.md) |
 | Integration, Error Handling & Documentation | Karah | [docs/Integration,-Error-Handling-&-Documentation.md] (./docs/Integration,-Error-Handling-&-Documentation.md) |
 
 ## API Testing
