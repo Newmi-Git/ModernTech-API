@@ -13,7 +13,7 @@ import { validateEmployee, validateEmployeeId, handleValidation } from "../valid
 const router = express.Router();
 
 router.get("/", verifyToken, getAllEmployees);
-router.get("/:employee_id", verifyToken, validateEmployeeId, handleValidation, getOneEmployee);
+router.get("/:employee_id", verifyToken, validateEmployeeId, handleValidation, requireOwnerOrRole("hr", "manager"), getOneEmployee);
 router.post("/", verifyToken, requireRole("hr", "manager"), validateEmployee, handleValidation, createNewEmployee);
 router.put("/:employee_id", verifyToken, requireRole("hr", "manager"), validateEmployeeId, validateEmployee, handleValidation, editEmployee);
 router.delete("/:employee_id", verifyToken, requireRole("hr"), validateEmployeeId, handleValidation, removeEmployee);

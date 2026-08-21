@@ -25,4 +25,18 @@ function requireRole(...allowedRoles) {
   };
 }
 
-export { verifyToken, requireRole };
+
+// Lets hr/manager (or whichever roles are passed in) access any record.
+// Anyone else can only access the record matching their own employeeId.
+// Helps with security
+function requireOwnerOrRole(...allowedRoles) {
+  return (req, res, next) => {
+    const targetId = Number(req.params.employee_id);
+    if (allowedRoles.includes(req.user.role) || req.user.employeeId === targetId) {
+      return next();
+    }
+    return res.status(403).json({ success: false, message: 'You do not have permission to view this record.' });
+  };
+}
+
+export { verifyToken, requireRole, requireOwnerOrRole };

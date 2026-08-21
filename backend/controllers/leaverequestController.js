@@ -8,10 +8,10 @@ import pool from "../config/db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 const getAllLeaveRequests = async (req, res) => {
-    const requests = await getLeaveRequests();
+    const { page, limit } = req.query;
+    const requests = await getLeaveRequests(page, limit);
     res.json(requests);
 };
-
 
 const submitLeaveRequest = asyncHandler(async (req, res) => {
     const { start_date, end_date, reason } = req.body;

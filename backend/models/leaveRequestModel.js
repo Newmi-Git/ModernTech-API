@@ -1,6 +1,14 @@
 import pool from "../config/db.js";
 
-const getLeaveRequests = async () => {
+const getLeaveRequests = async (page, limit) => {
+    if (page && limit) {
+        const offset = (Number(page) - 1) * Number(limit);
+        const [rows] = await pool.query(
+            "SELECT * FROM leave_requests LIMIT ? OFFSET ?",
+            [Number(limit), offset]
+        );
+        return rows;
+    }
     const [rows] = await pool.query("SELECT * FROM leave_requests");
     return rows;
 };

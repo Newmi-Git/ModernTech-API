@@ -6,7 +6,8 @@ import {
 import asyncHandler from "../utils/asyncHandler.js";
 
 const getAllAttendance = async (req, res) => {
-    const attendance = await getAttendance();
+    const { page, limit } = req.query;
+    const attendance = await getAttendance(page, limit);
 
     res.json(attendance);
 };

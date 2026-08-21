@@ -15,7 +15,7 @@ router.get("/", verifyToken, requireRole("hr", "manager"), getAllPayrollsControl
 
 router.get("/summary", verifyToken, requireRole("hr", "manager"), getPayrollSummaryController);
 
-router.get("/:employee_id", verifyToken, getOnePayroll);
+router.get("/:employee_id", verifyToken, requireOwnerOrRole("hr", "manager"), getOnePayroll);
 
 router.post("/", verifyToken, requireRole("hr", "manager"), validatePayroll, handleValidation, createNewPayroll);
 

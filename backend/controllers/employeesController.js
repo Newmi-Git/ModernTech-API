@@ -10,15 +10,17 @@ import {
 import { getCached, setCached, clearCached } from "../utils/cache.js";
 
 const getAllEmployees = async (req, res) => {
-    const cached = getCached("employees:all");
+    const { page, limit } = req.query;
+    const cacheKey = (page && limit) ? `employees:page:${page}:${limit}` : "employees:all";
 
+    const cached = getCached(cacheKey);
     if (cached) {
         return res.json(cached);
     }
 
-    const employees = await getEmployees();
+    const employees = await getEmployees(page, limit);
 
-    setCached("employees:all", employees, 30_000);
+    setCached(cacheKey, employees, 30_000);
 
     res.json(employees);
 };

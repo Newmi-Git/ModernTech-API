@@ -77,6 +77,7 @@ const createNewPayroll = async (req, res) => {
     );
 
     clearCached("payrolls:all");
+    clearCached("payrolls:summary");
 
     res.status(201).json({
         success: true,
@@ -99,6 +100,7 @@ const editPayroll = async (req, res) => {
     );
 
     clearCached("payrolls:all")
+    clearCached("payrolls:summary");
 
     const payroll = await getPayrollByEmployeeId(employee_id);
     const calculatedPayroll = calculatePayroll(payroll[0]);
@@ -108,7 +110,14 @@ const editPayroll = async (req, res) => {
 
 
 const getPayrollSummaryController = async (req, res) => {
+    const cached = getCached("payrolls:summary");
+    if (cached) {
+        return res.json(cached);
+    }
+
     const summary = await getPayrollSummary();
+    setCached("payrolls:summary", summary, 30_000);
+
     res.json(summary);
 };
 
