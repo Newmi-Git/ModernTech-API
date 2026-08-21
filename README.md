@@ -29,7 +29,7 @@ Password: Employee123!
 
 ## Project Structure
 
-​```bash
+```
 backend/
 ├── config/       # DB connection config
 ├── controllers/  # Route handler logic
@@ -40,26 +40,24 @@ backend/
 ├── utils/        # Shared helpers (caching, etc.)
 ├── scripts/      # One-off maintenance scripts
 └── Modern-Tech-Db.sql   # Full schema + seed data
-​```
-
+```
 
 ## Getting Started
 
 1. Clone the repo and install dependencies:
 ```bash
-   cd backend
-   npm install
+cd backend
+npm install
 ```
 2. Set up environment variables (`.env`) — DB host/user/password, `JWT_SECRET`.
 3. Run the schema against your MySQL instance:
 ```bash
-   mysql -u <user> -p < backend/Modern-Tech-Db.sql
+mysql -u <user> -p < backend/Modern-Tech-Db.sql
 ```
 4. Start the server:
 ```bash
-   npm start
+npm start
 ```
-
 
 ## Documentation
 
@@ -80,7 +78,6 @@ Postman collection and testing notes are in [`Testing/`](./Testing).
 ## Related Repos
 
 - Frontend: [ModernTech-Solutions](https://github.com/Newmi-Git/ModernTech-Solutions)
-
 
 ## Authentication & Authorization
 
