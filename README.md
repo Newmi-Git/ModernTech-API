@@ -5,10 +5,6 @@ Node.js/Express REST API backed by MySQL, providing employee management,
 authentication, payroll, attendance, and leave request functionality for
 the ModernTech Solutions frontend.
 
-## Live Site
-
-[View the live site](https://moderntechsolutionz.netlify.app/html/login.html)
-
 # USER LOGINS
 
 ## HR LOGIN
@@ -18,6 +14,10 @@ Password: HrAdmin123!
 ## Employee LOGIN
 EMAIL: thabo.molefe@moderntech.com
 Password: Employee123!
+
+## Live Site
+
+[View the live site](https://moderntechsolutionz.netlify.app/html/login.html)
 
 ## Tech Stack
 
