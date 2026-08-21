@@ -48,7 +48,22 @@ const updateEmployee = async (
 };
 
 const deleteEmployee = async (employee_id) => {
-    await pool.query("DELETE FROM employees WHERE employee_id = ?", [employee_id]);
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        // Delete the login FIRST. If we delete the employee first, the FK's
+        // ON DELETE SET NULL just nulls employee_id on this row instead of
+        // removing it — leaving an orphaned account whose email is
+        // permanently marked as taken, even though nothing shows it anywhere.
+        await connection.query("DELETE FROM users WHERE employee_id = ?", [employee_id]);
+        await connection.query("DELETE FROM employees WHERE employee_id = ?", [employee_id]);
+        await connection.commit();
+    } catch (err) {
+        await connection.rollback();
+        throw err;
+    } finally {
+        connection.release();
+    }
 };
 
 export {
